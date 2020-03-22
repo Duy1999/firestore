@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String Key_title = "title";
     private static final String Key_description = "description";
 
-    private EditText editTextTitle;
-    private EditText editTextDescription;
+    private EditText editTextTitle = null;
+    private EditText editTextDescription = null;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Button button;
+    private Button button = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 String title = editTextTitle.getText().toString();
                 String description = editTextDescription.getText().toString();
 
-                Map<String, Object> note = new HashMap<>();
+                Map<String, String> note = new HashMap<>();
                 note.put(Key_title, title);
                 note.put(Key_description,description);
                 CollectionReference number1 = db.collection("Notebook");
                 number1.document("1st note").set(note)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
+                            public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(MainActivity.this, "Works!", Toast.LENGTH_SHORT).show();
                             }
                         })
